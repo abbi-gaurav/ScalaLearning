@@ -1,0 +1,269 @@
+#+OPTIONS: title:Programming In Scala Key Points
+
+#+OPTIONS: toc:1 
+
+* operands
+** left or right operand (if a operator name ends with a ":", then it is a right operand)
+*** a * b = a.*(b)
+*** a :: b = b.::(a)
+** when leave off "=" sign before the function body, the return type is always Unit, it is then a procedure for "side-effects"
+* Companion objects
+** defined with the same name as the class and in the same source file
+** class and a companion object can access each others private members
+* Formatting
+** """ : better way to write strings which have lot of escape characters
+* Symbol
+** similar to undeclared identifier in a dynamically typed languge
+* prefix and postfix
+** unary operators: The only identifiers that can be used as prefix operators are +, -, !, and ~
+** The convention is that you include parentheses if the method has side effects, such as println()
+* Constructors
+** The invoked constructor is either the primary constructor (as in the Rational example), or another auxiliary constructor that comes textually before the calling constructor.
+* implicit
+** The implicit modifier in front of the method tells the compiler to apply it automatically in a number of situations
+** for an implicit conversion to work, it needs to be in scope. If you place the implicit method definition inside class Rational, it won’t be in scope in the interpreter.
+* reassignment of vars results in *unit value*
+** var x = 2
+** x = 3 //this results in unit value
+** so ((line = readLine()) != "") will always be true
+* try-catch
+** throw has a result type "Nothing"
+** catch is based on pattern matching
+* function literals and function values
+** literals exists in source code
+** values exists at runtime
+* target typing : type inference
+* placeholder "_"
+** works only when parameter appears only once.
+** e.g. List(1,2,3) filter (_ < 2)
+* partially applied functions
+** e.g.
+*** println _
+*** list foreach(println _)
+*** list foreach(println) // in case all parameteres are partially applied
+*** def sum (a:Int, b:Int)= a+b; val x = sum (1,_:Int); val p = sum _
+*** def sum (a:Int) (b:Int) = a+b; val y = sum (2) _ ;
+*** _ might not be required when the sum(2) is passed as a function parameter
+**** def sum2(a:Int)(b:Int) = a+b; def x(f:Int=>Int) = f(2); x(sum2(3))
+* closures
+** (x:Int) => x+ 1 //closed term
+** (x:Int) => x+more //open term since more is a free variable
+** the function value created for an open term is achieved by binding its free variables, this is closure (it is an act of closing)
+** closure sees the change to the free variable and also able to modify them
+** in case there are several copies of the free variable, the one that was active at the  time closure is created is being used
+* repeated parameters :
+** def echo(args:String*)
+** echo(); echo("hi"); echo ("hiii", "there"); val arr = Array("hiii"); echo(arr : _*)
+* tail recursion
+** complier optimizes the calls and uses only the single stack, iff the return value is the call to the function itself and nothing else
+** can be turned off by using -g:notailcalls in scalac or repl
+** currently limited to the case where the function calls itself directly, not through any intermediary. this is due to instruction set limitation of JVM
+* fpConcepts.composition and inheritace
+** fields and methods belong to same namespace
+*** this implies that in subclass, one can override methods with field definitions
+** scala has two namespaces
+*** values (fields, methods, packages, and singleton objects)
+*** types (class and trait names)
+** parameteric field
+*** class x(val param : Int){}
+* scala class heirarchy
+** implicit conversions of Int to RichInt
+* traits
+** extends
+** with
+** cannot have class Parameters
+** super calls are statically bound whereas in classes they are dynamically bound (_stackable modifications_)
+** makes easier to write rich interfaces
+** e.g. Ordered
+** Stackable modifications using linearization
+* packages
+** can be nested like Java or C# namespaces
+* imports
+** can appear anywhere
+** may refer to objects or singletons
+** can also rename
+*** e.g. import Fruits.{Apple => McIntosh, Orange}, here Apple has been renamed to McIntosh
+*** e.g. import Fruits.{Pear => _, _} //imports all from Fruits except Pear
+* Access Modifiers
+** private : only accessible from within the class in which it has been defined
+*** unlike java outer class cannot access the members of inner class
+** protected : only from the sub classes, not even from the same package as in java
+** private [X] acess is visible upto x
+** object private : private[this]
+*** val obj = new Nav
+*** obj.blah //this will not compile, _even if the code is in class Nav_
+** Companion objects
+*** a class shares all its  access rights with its companion object and vice-versa
+* Testing
+** ScalaTest
+*** FunSuite : test as a function passed as a call-by-name parameter
+*** Spec : Behavior-driven-development
+**** Describers
+**** Specifiers
+** Junit
+** TestNg
+** ScalaCheck
+*** properties
+*** generators
+* case classes and pattern matching
+** case class Var(x:String) extends Expr
+*** makes it pattern matchable
+*** adds a factory method for construction z.b. val x = Var ("a")
+*** all elements in the parameter list get a val prefix, so they are maintained as fields
+*** natural implementaions of equals, toString, hashcode are added, they will be computed for the whole tree of the class and its parameters
+** match is an expression in scala
+** constants can also be used in the pattern matching
+** back-tick can be used to refer to constants e.g. `pi`
+** case List(0, _*) matches a list starting with 0 and then having 0 or more elements
+** typed patterns
+*** pattern matching cannot be done on the types of arguments of collections due to erasure
+**** e.g. case m:Map[_,_] => m.size //this is OK
+**** but case m:Map[Int, Int] =>  //this will always execute for any type of map
+**** Arrays work since they are handled differently
+** variable patterns
+*** e.g. case Unop("abs", e @ Unop("abs",_)) => e
+** pattern guards
+*** e.g. case n:Int if (n > 0)=> n
+*** case BinOp("+", x, y) if (x == y) => BinOp("*", x, Num(2))
+** sealed classes
+*** subclasses can only be present in the same class where parent exists
+*** compiler warns for missing cases in pattern matching
+** patterns to deconstruct
+*** val BinOp(op, left, right) = exp
+*** val (first, snd) = tuple
+** case sequences as partial functions
+** patterns in for-expression
+* lists
+** cons and concatenate associate to right
+** Type inference in flow based
+*** When designing a polymorphic method that takes some non-function arguments and a function argument, place the function argument last in a curried parameter list by its own.
+*** def mergeSort[T](less: (T, T) => Boolean)(list: List[T]): List[T]
+**** mergeSort[Int](_ < _)(list)
+*** def mergeSort[T](list:List[T])(less:(T,T)=>Boolean)
+**** mergeSortSwapped(list)(_ < _)
+* Other collections
+** Iterable
+*** Seq -- ordered collections
+**** List
+**** Array
+**** ListBuffer
+***** constant prepend (+:) and append (+=) operations
+**** Queue - mutable and immutable
+**** Stack - mutable and immutable
+**** String - Seq[Char]
+*** Set (== based atmost one element in the collection)
+**** Immutable ==> Hashset, TreeSet
+**** Mutable ==> Hashset, TreeSet
+*** Map
+**** Immutable ==> HashMap, TreeMap
+**** Mutable ==> HashMap, TreeMap
+*** thread safe
+**** e.g. val threadSafeSet = new mutable.HashSet[String]() with mutable.SynchronizedSet
+*** += and other operations ending with "=" work on var for collections and all other types
+**** e.g. var set2 = Set(1,2); set2 += 3
+* Stateful objects
+** var hours = 12 defined in a class
+** has getter hours and setter hours_
+** var x:Int = _
+*** initializes a default value
+** var x:Int
+*** this is an abstract variable
+* Type parameterization
+** Variance : defines the inheritance relationship of parameterized types
+*** Covariance: if S <: T, Then Queue[S] <: Queue[T] holds
+*** Nonvariance: if S <: T, Then Queue[S] <: Queue[T] does not hold, neither other way around
+*** Contravariant: if S <: T, Then Queue[S] >: Queue[T] holds
+*** as soon as a generic parameter type appears as the type of a method parameter, the containing class or trait may not be covariant in that type parameter
+**** e.g. append method in List
+** Type constructor: Queue[Int]
+** Liskov Substitution Principle
+*** it is safe to assume that a type T is a subtype of a type U if you can sub- stitute a value of type T wherever a value of type U is required.
+** Function
+*** arguments: contravariant
+*** return value: covariant
+* Abstract Members
+** val
+** var
+** type
+** method
+** it is fine to override a def with a val, but not the other way around
+** lazy vals
+** path dependent types
+* Implicit conversions and parameters
+** Implicit definitions are those that the compiler is allowed to insert into a program in order to fix any of its type errors
+** Rules
+*** Only definitions marked implicit are available
+*** An inserted implicit conversion must be in scope as a single identifier, or be associated with the source or target type of the conversion
+**** exception: The compiler will also look for implicit definitions in the companion object of the source or expected target types of the conversion
+*** An implicit conversion is only inserted if there is no other possible conversion to insert
+*** Only one implicit is tried
+*** Whenever code type checks as it is written, no implicits are attempted
+** Where implicits are tried
+*** conversion to an expected type
+*** conversion of the receiver of the selection
+**** receiver is the object on which method is invoked
+*** implicit parameters
+* For expressions
+** for (seq) yield expr
+*** seq is a sequence of generators, definitions and filters
+*** *generator*
+**** pat <- expr
+*** *definition*
+**** pat = expr
+*** *filter*
+**** if expr
+*** e.g for (p <- persons; n=p.name; if(n startsWith "To")) yield p
+* Extractors
+** an extractor extracts the parameters from which an object passed to it was created
+** lets you define new patterns for existing types
+** whenever pattern matching encounters a pattern referring to an extractor object, it invokes the extractor’s unapply method on the selector expression
+** can be used on generic types also, scala typecheck will take care of correct application
+** extraction and injection
+*** extraction == T == Some(n1,n2...) [unapply/unapplySeq]
+*** injection == (n1,n2...) => T [apply]
+*** should be dual of each other
+*** Email.unapply(Email.apply(user, domain)) == Some(user, domain)
+** pattern *case Email(user,domain)* will invoke Email.unapply(user:User):Option[(String,String)]
+** *def unapply(object: S): Option[(T1, ..., Tn)]*
+** variable binding
+** extractors important points
+*** representation independence
+*** every regex in scala defines an extractor
+* Annotations
+** meta-programming tools
+*** annotations act as directives to these tools
+** annotations general form
+*** @annot(exp1, exp2, ...) {val name1=const1, ..., val namen=constn}
+**** @deprecated
+**** @volatile
+**** @SerialVersionUID(1234)
+**** @transient
+**** @scala.beans.BeanProperty
+***** generates get and set methods for a field
+* XML
+** semi-structured data
+* Equality
+** avoid pitfalls
+*** _Defining equals with the wrong signature_ : always use *override def equals(other: Any): Boolean*
+*** _Changing equals without also changing hashCode_
+*** _Defining equals in terms of mutable fields_
+*** _Failing to define equals as an equivalence relation_
+**** reflexive
+**** transitive
+**** symmetric
+**** consistent
+**** non-null with null is always false
+** use canEquals _canEquals this_
+** cache hashCode for performance reasons using _override def val hashCode = ???_
+* Scala and Java
+** use javap to inspect
+** singleton object is translated to _App$_ format
+** annotations
+** *Existential Types*
+*** general form is *type forSome { declarations }*
+**** ex 1 Iterator<?> == Iterator[T] forSome { type T } == Iterator[_]
+**** ex 2 Iterator<? extends Component> == Iterator [T] forSome { T <: Component } == Iterator[_ <: Component]
+* type classes
+** A type class _C_ defines some behaviour in the form of operations that must be supported by a type T for it to be a member of type class C
+* path dependent types
+** a nested type is bound to a specific instance of the outer type, not to the outer type itself

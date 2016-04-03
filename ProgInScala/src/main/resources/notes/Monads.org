@@ -1,0 +1,60 @@
+#+OPTIONS: title: Understanding Monads
+#+OPTIONS: toc:1 
+
+* Monads are containers types
+* Monads support higher order functions
+* Functors
+** In Scala a functor is a class with a map method and a few simple properties
+ class M[A] {  
+   def map[B](f: A => B):M[B] = ...
+ }
+** Functor Laws
+*** identity
+**** def identity[A](x:A) = x
+**** m map identity = m
+**** for (x <- m) yield x = m
+*** compose
+**** m map g map f = m map (x => f(g(x)))
+**** for (y <- (for x <- m) yield g(x)) yield f(y) = for(x <- m) yield f(g(x))
+** Monad Laws
+*** Zeroth Law
+**** m map f ≡ m flatMap {x => unit(f(x))}
+**** for (x <- m) yield f(x) ≡ for (x <- m; y <- unit(f(x))) yield y
+**** m flatMap f = flatten (m map f)
+*** First law
+**** m flatMap unit = m
+**** for {x <- m; y <- unit(x)} yield y = m
+*** Second Law
+**** unit(x) flatMap f = f(x)
+**** for {y <- unit(x); result <- f(y)} yield result = f(x)
+*** Third Law
+**** m flatMap g flatMap f = m flatMap {x => g(x) flatMap f}
+**** for{a <- m; b <- g(a); result <- f(b)}yield result ≡ for{a <- m ; result <- for { b <- g(a); temp <- f(a)}yield temp} yield result
+
+* Typesafe talk
+** Monoids
+*** are accumulators, have a starting value (identity) and a combination function
+*** laws
+**** a comb i == a
+**** i comb a == a
+**** a comb b == b comb a
+**** a comb (b comb c) == (a comb b) comb c
+*** if laws are followed then then combination of a sequence can be parallelised
+*** is a binary operation that has 3 properties
+**** Identity x+0 == 0+x
+**** Associativity  add or remove parenthesis (order of aggregation does not matter)
+**** Closure always return the result of same type, no exceptions or nulls
+** Functor
+*** roughy a transformer
+*** has a mapping function that takes a function as an input and returns the mapped item/s
+*** laws
+**** x map id = x
+**** x map (a andThen b) == (x map a) map b
+** Monads
+*** laws
+**** id(x) flatMap f = f(x)
+**** id(x) flatMap id = id(x)
+**** (id(x) flatMap f) flatMap g == id(x) flatMap (y => f(y) flatMap g)
+* Free Monads
+** is basically just a way to stuff a sequential computation in a data structure, so you can inspect that data structure and “interpret” it later. *e.g. List*
+** 
