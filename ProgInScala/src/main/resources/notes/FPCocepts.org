@@ -1,0 +1,7 @@
+* Persistent data structures
+We say that functional data structures are persistent, meaning that existing references are never changed by operations on the data structure
+* Data sharing
+* Folds
+** foldRight must traverse all the way to the end of the list (pushing frames onto the call stack as we go) before it can begin collapsing it.
+* ADT *algebraic data types*
+** it is the sum or union of its data constructors

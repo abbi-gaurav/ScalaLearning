@@ -1,4 +1,4 @@
-package com.learn.fpConcepts.composition
+package com.learn.fpConcepts.hof.folds
 
 import scala.annotation.tailrec
 
