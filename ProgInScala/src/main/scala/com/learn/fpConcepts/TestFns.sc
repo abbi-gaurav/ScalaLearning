@@ -1,15 +1,23 @@
-import com.learn.fpConcepts.errorHandling.EitherOps._
+import com.learn.fpConcepts.errorHandling.Partial._
+import com.learn.fpConcepts.errorHandling.{Error, Partial, Success}
 
-val x: Either[String, (String, Int, Double)] = for {
-  age <- Right(42)
-  name <- Right[String, String]("invalid name")
-  salary <- Right(1000000.0)
-} yield (name, age, salary)
+val ps: List[Partial[String, Int]] = List(Success(1), Error(List("a")), Success(2), Error(List("b")))
 
-val eithersL = List[Either[String, Int]](Right(1), Left("2"), Right(3))
-val eithersR = List[Either[String, Int]](Right(1), Right(2), Right(3))
-sequence(eithersL)
-sequence(eithersR)
+sequence(ps)
+traverse(ps)(x => Success(x.toDouble))
 
-traverse(eithersL)(x => Right(x.toDouble))
-traverse(eithersR)(x => Right(x.toDouble))
+val ss: List[Partial[String, Int]] = List(Success(1), Success(2))
+sequence(ss)
+traverse(ss)(x => Success(x.toDouble))
+
+Success(1) map (_.toDouble)
+
+(Error(List("s")): Partial[String, Int]) map (_.toDouble)
+
+Error(List("s")).orElse(Success(5))
+
+for {
+  name <- Success("gg")
+  age <- Error(List("invalid age"))
+  dept <- Error(List("invalid dept"))
+} yield (name, age, dept)

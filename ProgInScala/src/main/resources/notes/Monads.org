@@ -37,6 +37,18 @@
 *** Closure always return the result of same type, no exceptions or nulls
 
 * Monads
+** *From Function Program Design in scala*
+*** Monad as trait (paramteric type)
+trait M[T]{
+    def flatMap[U](f:T=>M[U]):M[U]
+    def unit(x:T):M[T]
+}
+m map f = m flatMap(x => unit(f(x)))
+        = m flatMap (f andThen unit)
+*** Properties
+**** Associativity : (x flatMap f) flatMap g = x flatMap (y => f(y) flatMap g)
+**** Left unit : unit(x) flatMap f == f(x)
+**** Right unit : m flatMap unit == m
 ** Monads are containers types
 ** Monads support higher order functions
 ** laws
