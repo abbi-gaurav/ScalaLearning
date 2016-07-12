@@ -1,4 +1,4 @@
-package week1.rg
+package forExp.monads.rg
 
 import scala.util.Random
 

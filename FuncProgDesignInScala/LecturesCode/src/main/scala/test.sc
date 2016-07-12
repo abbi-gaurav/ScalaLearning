@@ -1,4 +1,5 @@
-import week2.SqrtGuesser._
-import week2.Streams._
+import lazyEvaluation.waterPouring.Pouring
 
-sqrt(3)
+val problem = new Pouring(Vector(4,9, 19))
+
+problem.solution(11)

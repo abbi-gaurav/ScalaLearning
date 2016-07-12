@@ -26,8 +26,8 @@ object EitherOps {
 
   implicit def extendedEither[E, A](either: Either[E, A]): EitherExtRightP[E, A] = new EitherExtRightP(either)
 
-  def traverse[E, A, B](a: List[Either[E, A]])(f: A => Either[E, B]): Either[E, List[B]] = {
-    a.foldRight[Either[E, List[B]]](Right(Nil)) { case (x: Either[E, A], acc: Either[E, List[B]]) =>
+  def traverse[E, A, B](as: List[Either[E, A]])(f: A => Either[E, B]): Either[E, List[B]] = {
+    as.foldRight[Either[E, List[B]]](Right(Nil)) { case (x: Either[E, A], acc: Either[E, List[B]]) =>
       x.flatMap(f).map2(acc)((x: B, y: List[B]) => x :: y)
     }
   }

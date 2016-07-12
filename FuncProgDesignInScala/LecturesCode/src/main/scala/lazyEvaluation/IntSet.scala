@@ -1,4 +1,4 @@
-package week2
+package lazyEvaluation
 
 /**
   * Created by gabbi on 05/06/16.

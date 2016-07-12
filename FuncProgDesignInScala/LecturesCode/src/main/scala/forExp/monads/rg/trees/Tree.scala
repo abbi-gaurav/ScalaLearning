@@ -1,6 +1,6 @@
-package week1.rg.trees
+package forExp.monads.rg.trees
 
-import week1.rg.RGenerator
+import forExp.monads.rg.RGenerator
 
 /**
   * Created by gabbi on 29/05/16.
