@@ -94,6 +94,13 @@ object StreamOps {
 
   implicit def extendedStream[A](stream: Stream[A]): StreamWrapper[A] = new StreamWrapper[A](stream = stream)
 
+  /**
+    * @param z inital state [[S]]
+    * @param f function that takes inital state and generates an [[Option]] tuple of (A, next state)
+    * @tparam A
+    * @tparam S
+    * @return
+    */
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
     case Some((a, s)) => a #:: unfold(s)(f)
     case None => Stream.empty

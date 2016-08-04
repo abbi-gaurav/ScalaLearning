@@ -5,14 +5,15 @@
 
 # Intellij
 .idea/
-*.iml
 *.iws
 
 # Mac
 .DS_Store
 
 # Maven
-log/
 target/
 project/
-projectFilesBackup
+src/main/scala-2.11/
+src/test/java/
+src/test/resources/
+src/test/scala-2.11/
