@@ -1,9 +1,13 @@
 import scalaz._
 import Scalaz._
 
-1 != 2 && false
+1 != 2
 
-1 =/= 2 && false
+1 =/= 2
+
+1 /== 2
+//won't compile
+//1 /== 2 && true
 
 1 gt 2
 1.0 ?|? 2.0
