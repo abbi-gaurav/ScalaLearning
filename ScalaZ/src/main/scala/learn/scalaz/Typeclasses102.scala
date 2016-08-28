@@ -3,7 +3,8 @@ package learn.scalaz
 /**
   * Created by gabbi on 10/08/16.
   */
-object Typeclasses102 {
+object Typeclasses102 extends App {
+
   import scala.language.implicitConversions
 
   trait CanTruthy[A] {
@@ -46,7 +47,7 @@ object Typeclasses102 {
     case _ => true
   })
 
-  implicit def listCanTruthy[A]: CanTruthy[List[A]] = CanTruthy.truthys{
+  implicit def listCanTruthy[A]: CanTruthy[List[A]] = CanTruthy.truthys {
     case Nil => false
     case _ => true
   }
@@ -55,13 +56,26 @@ object Typeclasses102 {
 
   import ToCanIsTruthyOps._
 
-  def canTruthyIf[A:CanTruthy, B, C](cond:A)(ifYes: => B)(ifNo: => C): Any ={
-    if(cond.truthy) ifYes else ifNo
+  def canTruthyIf[A: CanTruthy, B, C](cond: A)(ifYes: => B)(ifNo: => C): Any = {
+    if (cond.truthy) ifYes else ifNo
   }
 
-  1.truthy
-  List("ss").truthy
-  (Nil: List[Int]).truthy
-  Nil.truthy
+  implicit val booleanCanTruthy: CanTruthy[Boolean] = CanTruthy.truthys(identity)
+
+
+  def run: Unit = {
+    val execs: String = List(
+      1.truthy,
+      List("ss").truthy,
+      (Nil: List[Int]).truthy,
+      Nil.truthy,
+      false.truthy,
+      canTruthyIf(Nil)("upar")("neeche")
+    ) mkString "\n"
+
+    println(execs)
+  }
+
+  run
 
 }

@@ -1,7 +1,15 @@
 * Persistent data structures
-We say that functional data structures are persistent, meaning that existing references are never changed by operations on the data structure
+** We say that functional data structures are persistent, meaning that existing references are never changed by operations on the data structure
 * Data sharing
 * Folds
 ** foldRight must traverse all the way to the end of the list (pushing frames onto the call stack as we go) before it can begin collapsing it.
 * ADT *algebraic data types*
 ** it is the sum or union of its data constructors
+* HKT
+** ability to generically abstract across things that take type parameters.
+** (* -> *) *List[_]*
+*** given one type produce another
+** (* -> * -> *) *Map[_,_]*
+*** give one type, then another, produce another
+** you can have kinds that are themselves parameterized by higher kinded types
+*** e.g ((* -> *) -> *)  *Functor[F[_]]*

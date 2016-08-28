@@ -11,6 +11,11 @@
  class M[A] {  
    def map[B](f: A => B):M[B] = ...
  }
+
+trait Functor[F[_]] {
+  self =>
+  def map[A, B](fa: F[A])(f: A => B): F[B]
+}
 ** Functor Laws
 *** identity
 **** def identity[A](x:A) = x
@@ -22,7 +27,6 @@
 
 * Applicative functors
 ** First of all, applicative functor forms a typeclass which can be implemented in Scala. It allows applying a wrapped function to a wrapped value.
-** 
 * Monoids
 ** are accumulators, have a starting value (identity) and a combination function
 ** laws
@@ -72,4 +76,3 @@ m map f = m flatMap(x => unit(f(x)))
 ** All monads are applicatives
 * Free Monads
 ** is basically just a way to stuff a sequential computation in a data structure, so you can inspect that data structure and “interpret” it later. *e.g. List*
-** 
