@@ -25,14 +25,26 @@ trait RNG {
   def double: Rand[Double] = map(positiveInt)(_ / (Int.MaxValue.toDouble + 1))
 
   def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
-    val (a, r1) = ra(rng)
-    val (b, r2) = rb(rng)
-    (f(a, b), r2)
+    val (a, rngA) = ra(rng)
+    val (b, rngB) = rb(rng)
+    (f(a, b), rngB)
   }
 
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = fs.foldRight(unit(List[A]())) {
     case (f: Rand[A], acc: Rand[List[A]]) => map2(f, acc)(_ :: _)
   }
+
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = (rng: RNG) => {
+    val (a, rA) = f(rng)
+    g(a)(rng)
+  }
+
+  def mapInFM[A, B](s: Rand[A])(f: A => B): Rand[B] = flatMap(s)(a => unit(f(a)))
+
+  def map2InFM[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = {
+    flatMap(ra)(a => flatMap(rb)(b => unit(f(a, b))))
+  }
+
 }
 
 object RNG {
