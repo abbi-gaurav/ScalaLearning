@@ -1,4 +1,4 @@
-import com.learn.fpConcepts.laziness.StreamOps._
+import com.learn.laziness.StreamOps._
 
 import scala.Stream._
 import scala.language.postfixOps
@@ -19,7 +19,7 @@ val s = 1 to 10 toStream
 val sub = 4 to 7 toStream
 val sub2 = 9 to 11 toStream
 
-import com.learn.fpConcepts.laziness.StreamUtils._
+import com.learn.laziness.StreamUtils._
 uHasSubSeq(s,sub)
 uHasSubSeq(s,sub2)
 startsWith(s,sub)

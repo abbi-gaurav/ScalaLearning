@@ -10,5 +10,6 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % "1.0.2",
   "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
   "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2",
-  "commons-io" % "commons-io" % "2.4"
+  "commons-io" % "commons-io" % "2.4",
+  "org.typelevel" %% "cats" % "0.7.2"
 )

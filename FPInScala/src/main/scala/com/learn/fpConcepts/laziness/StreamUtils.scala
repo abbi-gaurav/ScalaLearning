@@ -1,6 +1,6 @@
 package com.learn.fpConcepts.laziness
 
-import com.learn.fpConcepts.laziness.StreamOps._
+import StreamOps._
 
 /**
   * Created by gabbi on 05/07/16.

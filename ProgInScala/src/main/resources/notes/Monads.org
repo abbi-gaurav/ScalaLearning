@@ -9,7 +9,7 @@
 *** x map (a andThen b) == (x map a) map b
 ** In Scala a functor is a class with a map method and a few simple properties
  class M[A] {  
-   def map[B](f: A => B):M[B] = ...
+   def map[B](f: A => B):M[B] = ???
  }
 
 trait Functor[F[_]] {
@@ -75,4 +75,9 @@ m map f = m flatMap(x => unit(f(x)))
 **** for{a <- m; b <- g(a); result <- f(b)}yield result ≡ for{a <- m ; result <- for { b <- g(a); temp <- f(a)}yield temp} yield result
 ** All monads are applicatives
 * Free Monads
+** Free monads are just a general way of turning functors into monads. 
+** Using a free monad gives you the structure of a composable DSL
 ** is basically just a way to stuff a sequential computation in a data structure, so you can inspect that data structure and “interpret” it later. *e.g. List*
+** Monad + interpretation ~ program + interpreter
+*** Monad represents computation step
+*** interpreter represents exceution
