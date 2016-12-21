@@ -35,4 +35,25 @@ object Fold {
   }
 
   def sum[M](implicit m: Monoid[M]): Fold[M, M] = Fold(m)(identity, identity)
+
+  import Average._
+
+  def average[A: Numeric]: Fold[A, Double] = Fold(averageMonoid)(
+    _tally = Average(_, 1),
+    _summarize = a => implicitly[Numeric[A]].toDouble(a.numerator) / a.denominator
+  )
+
+  import CustomMonoids._
+
+  def first[T]: Fold[T, Option[T]] = Fold(firstMonoid[T])(Some(_), identity)
+
+  def last[T]: Fold[T, Option[T]] = Fold(lastMonoid[T])(Some(_), identity)
+
+  def all[A](p: A => Boolean): Fold[A, Boolean] = Fold(andMonoid)(p, identity)
+
+  def any[A](p: A => Boolean): Fold[A, Boolean] = Fold(orMonoid)(p, identity)
+
+  def product[A: Numeric]: Fold[A, A] = Fold(numProductMonoid[A])(identity, identity)
+
+  def length[A]: Fold[A, Int] = Fold(intMonoid)(_ => 1, identity)
 }
