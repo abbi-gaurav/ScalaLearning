@@ -4,6 +4,7 @@ package com.learn.fpConcepts.purelFuncState
   * Created by gabbi on 25/07/16.
   */
 trait RNG {
+  //  type Rand[A] = State[RNG, A]
   type Rand[+A] = RNG => (A, RNG)
 
   def nextInt: (Int, RNG)
@@ -26,7 +27,7 @@ trait RNG {
 
   def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
     val (a, rngA) = ra(rng)
-    val (b, rngB) = rb(rng)
+    val (b, rngB) = rb(rngA)
     (f(a, b), rngB)
   }
 
@@ -34,9 +35,14 @@ trait RNG {
     case (f: Rand[A], acc: Rand[List[A]]) => map2(f, acc)(_ :: _)
   }
 
+  def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
+    val units: List[Rand[Int]] = List.fill(count)(0) map unit
+    sequence(units)(rng)
+  }
+
   def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = (rng: RNG) => {
     val (a, rA) = f(rng)
-    g(a)(rng)
+    g(a)(rA)
   }
 
   def mapInFM[A, B](s: Rand[A])(f: A => B): Rand[B] = flatMap(s)(a => unit(f(a)))
@@ -45,14 +51,15 @@ trait RNG {
     flatMap(ra)(a => flatMap(rb)(b => unit(f(a, b))))
   }
 
+  def intDouble(rng: RNG): ((Int, Double), RNG) = {
+    val (i, r2) = nextInt
+    val (d, r3) = double(r2)
+    ((i, d), r3)
+  }
+
 }
 
 object RNG {
-  def double(rNG: RNG): (Double, RNG) = {
-    val (ri, rng2) = rNG.nextInt
-    (ri.toDouble / Int.MaxValue, rng2)
-  }
-
   def ints(count: Int)(rNG: RNG): (List[Int], RNG) = {
     (0 until count).foldRight((List[Int](), rNG)) { case (_, (list, cRNG)) =>
       val (x, nRNG) = cRNG.nextInt

@@ -3,6 +3,12 @@
 * Data sharing
 * Folds
 ** foldRight must traverse all the way to the end of the list (pushing frames onto the call stack as we go) before it can begin collapsing it.
+* Purely Functional State
+** State changes make fucntions *not referentially transparent*
+** key is to make state updates explicit
+*** do not update state as a side effect
+*** return updated state along with the value
+*** 
 * ADT *algebraic data types*
 ** it is the sum or union of its data constructors
 * HKT

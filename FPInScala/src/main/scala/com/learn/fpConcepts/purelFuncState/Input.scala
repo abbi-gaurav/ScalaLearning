@@ -16,7 +16,7 @@ case class Machine(locked: Boolean, candies: Int, coins: Int) {
 }
 
 object Machine {
-  def operate(i: Input, m: Machine) = (i, m) match {
+  def operate(i: Input, m: Machine): Machine = (i, m) match {
     case (Coin, Machine(_, 0, _)) => m
     case (Turn, Machine(true, _, _)) => m
     case (Coin, Machine(false, _, _)) => m
@@ -30,7 +30,10 @@ object Machine {
     val state: State[Machine, Int] = for {
       x <- sequenceViaFoldRight(states)
       s <- get
-    } yield s.coins
+    } yield {
+      val coins: Int = s.coins
+      coins
+    }
 
     state
   }

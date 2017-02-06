@@ -9,8 +9,10 @@ import com.learn.fpConcepts.purelFuncState.State._
 
 case class State[S, +A](run: S => (A, S)) {
   def flatMap[B](g: A => State[S, B]): State[S, B] = State(s => {
-    val (a, sa) = run(s)
-    g(a).run(sa)
+    val (a: A, sa: S) = run(s)
+    val gs: State[S, B] = g(a)
+    val bRun: (B, S) = gs.run(sa)
+    bRun
   })
 
   def map[B](f: A => B): State[S, B] = flatMap(a => unit(f(a)))
