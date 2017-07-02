@@ -1,6 +1,6 @@
 import cats.free.Free
-import com.learn.fpConcepts.freeMonads.Orders
-import com.learn.fpConcepts.freeMonads.Orders._
+import freeMonads.Orders
+import freeMonads.Orders._
 
 val smartTrade: Free[Orders, Response] = for {
   _ <- buy("SAP", 100)

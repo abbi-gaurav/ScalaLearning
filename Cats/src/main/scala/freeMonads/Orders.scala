@@ -1,11 +1,10 @@
-package com.learn.fpConcepts.freeMonads
+package freeMonads
 
 import cats.data.Xor
 import cats.free.Free
-import cats.free.Free._
 import cats.{Id, ~>}
-import com.learn.fpConcepts.freeMonads.Orders._
-
+import freeMonads.Orders._
+import cats.free.Free._
 /**
   * Created by gabbi on 04/09/16.
   */
